@@ -64,82 +64,82 @@ describe('DensityFunction', () => {
 	})
 
 	it('Abs', () => {
-		const fn1 = wrap(new DF.Mapped('abs', new DF.Constant(2)))
+		const fn1 = wrap(new DF.Mapped('minecraft:abs', new DF.Constant(2)))
 		expect(fn1.compute(ContextA)).toEqual(2)
-		const fn2 = wrap(new DF.Mapped('abs', new DF.Constant(-3)))
+		const fn2 = wrap(new DF.Mapped('minecraft:abs', new DF.Constant(-3)))
 		expect(fn2.compute(ContextA)).toEqual(3)
 	})
 
 	it('Square', () => {
-		const fn1 = wrap(new DF.Mapped('square', new DF.Constant(2)))
+		const fn1 = wrap(new DF.Mapped('minecraft:square', new DF.Constant(2)))
 		expect(fn1.compute(ContextA)).toEqual(4)
-		const fn2 = wrap(new DF.Mapped('square', new DF.Constant(-3)))
+		const fn2 = wrap(new DF.Mapped('minecraft:square', new DF.Constant(-3)))
 		expect(fn2.compute(ContextA)).toEqual(9)
 	})
 
 	it('Cube', () => {
-		const fn1 = wrap(new DF.Mapped('cube', new DF.Constant(2)))
+		const fn1 = wrap(new DF.Mapped('minecraft:cube', new DF.Constant(2)))
 		expect(fn1.compute(ContextA)).toEqual(8)
-		const fn2 = wrap(new DF.Mapped('cube', new DF.Constant(-3)))
+		const fn2 = wrap(new DF.Mapped('minecraft:cube', new DF.Constant(-3)))
 		expect(fn2.compute(ContextA)).toEqual(-27)
 	})
 
 	it('Half negative', () => {
-		const fn1 = wrap(new DF.Mapped('half_negative', new DF.Constant(2)))
+		const fn1 = wrap(new DF.Mapped('minecraft:half_negative', new DF.Constant(2)))
 		expect(fn1.compute(ContextA)).toEqual(2)
-		const fn2 = wrap(new DF.Mapped('half_negative', new DF.Constant(-3)))
+		const fn2 = wrap(new DF.Mapped('minecraft:half_negative', new DF.Constant(-3)))
 		expect(fn2.compute(ContextA)).toEqual(-1.5)
 	})
 
 	it('Quarter negative', () => {
-		const fn1 = wrap(new DF.Mapped('quarter_negative', new DF.Constant(2)))
+		const fn1 = wrap(new DF.Mapped('minecraft:quarter_negative', new DF.Constant(2)))
 		expect(fn1.compute(ContextA)).toEqual(2)
-		const fn2 = wrap(new DF.Mapped('quarter_negative', new DF.Constant(-3)))
+		const fn2 = wrap(new DF.Mapped('minecraft:quarter_negative', new DF.Constant(-3)))
 		expect(fn2.compute(ContextA)).toEqual(-0.75)
 	})
 
 	it('Squeeze', () => {
-		const fn1 = wrap(new DF.Mapped('squeeze', new DF.Constant(2)))
+		const fn1 = wrap(new DF.Mapped('minecraft:squeeze', new DF.Constant(2)))
 		expect(fn1.compute(ContextA)).toEqual(0.4583333333333333)
-		const fn2 = wrap(new DF.Mapped('squeeze', new DF.Constant(0.5)))
+		const fn2 = wrap(new DF.Mapped('minecraft:squeeze', new DF.Constant(0.5)))
 		expect(fn2.compute(ContextA)).toEqual(0.24479166666666666)
-		const fn3 = wrap(new DF.Mapped('squeeze', new DF.Constant(-0.7)))
+		const fn3 = wrap(new DF.Mapped('minecraft:squeeze', new DF.Constant(-0.7)))
 		expect(fn3.compute(ContextA)).toEqual(-0.33570833333333333)
 	})
 
 	it('Add', () => {
-		const fn1 = wrap(new DF.Ap2('add', new DF.Constant(2), new DF.Constant(3)))
+		const fn1 = wrap(new DF.Ap2('minecraft:add', new DF.Constant(2), new DF.Constant(3)))
 		expect(fn1.compute(ContextA)).toEqual(5)
-		const fn2 = wrap(new DF.Ap2('add', new DF.Noise(16, 1, SHIFT), new DF.Constant(2)))
+		const fn2 = wrap(new DF.Ap2('minecraft:add', new DF.Noise(16, 1, SHIFT), new DF.Constant(2)))
 		expect(fn2.compute(ContextA)).toEqual(1.9594976210617139)
 		expect(fn2.compute(ContextB)).toEqual(1.9887069396954864)
 		expect(fn2.compute(ContextC)).toEqual(1.6672203651115742)
 	})
 
 	it('Mul', () => {
-		const fn1 = wrap(new DF.Ap2('mul', new DF.Constant(2), new DF.Constant(3)))
+		const fn1 = wrap(new DF.Ap2('minecraft:mul', new DF.Constant(2), new DF.Constant(3)))
 		expect(fn1.compute(ContextA)).toEqual(6)
-		const fn2 = wrap(new DF.Ap2('mul', new DF.Noise(16, 1, SHIFT), new DF.Constant(20)))
+		const fn2 = wrap(new DF.Ap2('minecraft:mul', new DF.Noise(16, 1, SHIFT), new DF.Constant(20)))
 		expect(fn2.compute(ContextA)).toEqual(-0.8100475787657212)
 		expect(fn2.compute(ContextB)).toEqual(-0.2258612060902705)
 		expect(fn2.compute(ContextC)).toEqual(-6.655592697768515)
-		const fn3 = wrap(new DF.Ap2('mul', DF.Constant.ZERO, new DF.Constant(3)))
+		const fn3 = wrap(new DF.Ap2('minecraft:mul', DF.Constant.ZERO, new DF.Constant(3)))
 		expect(fn3.compute(ContextA)).toEqual(0)
 	})
 
 	it('Min', () => {
-		const fn1 = wrap(new DF.Ap2('min', new DF.Constant(2), new DF.Constant(3)))
+		const fn1 = wrap(new DF.Ap2('minecraft:min', new DF.Constant(2), new DF.Constant(3)))
 		expect(fn1.compute(ContextA)).toEqual(2)
-		const fn2 = wrap(new DF.Ap2('min', new DF.Noise(16, 1, SHIFT), new DF.Constant(-0.3)))
+		const fn2 = wrap(new DF.Ap2('minecraft:min', new DF.Noise(16, 1, SHIFT), new DF.Constant(-0.3)))
 		expect(fn2.compute(ContextA)).toEqual(-0.3)
 		expect(fn2.compute(ContextB)).toEqual(-0.3)
 		expect(fn2.compute(ContextC)).toEqual(-0.33277963488842577)
 	})
 
 	it('Max', () => {
-		const fn1 = wrap(new DF.Ap2('max', new DF.Constant(2), new DF.Constant(3)))
+		const fn1 = wrap(new DF.Ap2('minecraft:max', new DF.Constant(2), new DF.Constant(3)))
 		expect(fn1.compute(ContextA)).toEqual(3)
-		const fn2 = wrap(new DF.Ap2('max', new DF.Noise(16, 1, SHIFT), new DF.Constant(-0.3)))
+		const fn2 = wrap(new DF.Ap2('minecraft:max', new DF.Noise(16, 1, SHIFT), new DF.Constant(-0.3)))
 		expect(fn2.compute(ContextA)).toEqual(-0.04050237893828606)
 		expect(fn2.compute(ContextB)).toEqual(-0.011293060304513524)
 		expect(fn2.compute(ContextC)).toEqual(-0.3)
