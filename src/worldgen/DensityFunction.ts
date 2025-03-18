@@ -62,35 +62,35 @@ export namespace DensityFunction {
 		}
 
 		const root = Json.readObject(obj) ?? {}
-		const type = Json.readString(root.type)
+		const type = Json.readString(root.type)?.replace(/^minecraft:/, '')
 		switch (type) {
-			case 'minecraft:blend_alpha': return new ConstantMinMax(1, 0, 1)
-			case 'minecraft:blend_offset': return new ConstantMinMax(0, -Infinity, Infinity)
-			case 'minecraft:beardifier': return new ConstantMinMax(0, -Infinity, Infinity)
-			case 'minecraft:old_blended_noise': return new OldBlendedNoise(
+			case 'blend_alpha': return new ConstantMinMax(1, 0, 1)
+			case 'blend_offset': return new ConstantMinMax(0, -Infinity, Infinity)
+			case 'beardifier': return new ConstantMinMax(0, -Infinity, Infinity)
+			case 'old_blended_noise': return new OldBlendedNoise(
 				Json.readNumber(root.xz_scale) ?? 1,
 				Json.readNumber(root.y_scale) ?? 1, 
 				Json.readNumber(root.xz_factor) ?? 80, 
 				Json.readNumber(root.y_factor) ?? 160, 
 				Json.readNumber(root.smear_scale_multiplier) ?? 8
 			)
-			case 'minecraft:flat_cache': return new FlatCache(inputParser(root.argument))
-			case 'minecraft:interpolated': return new Interpolated(inputParser(root.argument))
-			case 'minecraft:cache_2d': return new Cache2D(inputParser(root.argument))
-			case 'minecraft:cache_once': return new CacheOnce(inputParser(root.argument))
-			case 'minecraft:cache_all_in_cell': return new CacheAllInCell(inputParser(root.argument))
-			case 'minecraft:noise': return new Noise(
+			case 'flat_cache': return new FlatCache(inputParser(root.argument))
+			case 'interpolated': return new Interpolated(inputParser(root.argument))
+			case 'cache_2d': return new Cache2D(inputParser(root.argument))
+			case 'cache_once': return new CacheOnce(inputParser(root.argument))
+			case 'cache_all_in_cell': return new CacheAllInCell(inputParser(root.argument))
+			case 'noise': return new Noise(
 				Json.readNumber(root.xz_scale) ?? 1,
 				Json.readNumber(root.y_scale) ?? 1,
 				NoiseParser(root.noise),
 			)
-			case 'minecraft:end_islands': return new EndIslands()
-			case 'minecraft:weird_scaled_sampler': return new WeirdScaledSampler(
+			case 'end_islands': return new EndIslands()
+			case 'weird_scaled_sampler': return new WeirdScaledSampler(
 				inputParser(root.input),
 				Json.readEnum(root.rarity_value_mapper, RarityValueMapper),
 				NoiseParser(root.noise),
 			)
-			case 'minecraft:shifted_noise': return new ShiftedNoise(
+			case 'shifted_noise': return new ShiftedNoise(
 				inputParser(root.shift_x),
 				inputParser(root.shift_y),
 				inputParser(root.shift_z),
@@ -98,42 +98,42 @@ export namespace DensityFunction {
 				Json.readNumber(root.y_scale) ?? 1,
 				NoiseParser(root.noise),
 			)
-			case 'minecraft:range_choice': return new RangeChoice(
+			case 'range_choice': return new RangeChoice(
 				inputParser(root.input),
 				Json.readNumber(root.min_inclusive) ?? 0,
 				Json.readNumber(root.max_exclusive) ?? 1,
 				inputParser(root.when_in_range),
 				inputParser(root.when_out_of_range),
 			)
-			case 'minecraft:shift_a': return new ShiftA(NoiseParser(root.argument))
-			case 'minecraft:shift_b': return new ShiftB(NoiseParser(root.argument))
-			case 'minecraft:shift': return new Shift(NoiseParser(root.argument))
-			case 'minecraft:blend_density': return new BlendDensity(inputParser(root.argument))
-			case 'minecraft:clamp': return new Clamp(
+			case 'shift_a': return new ShiftA(NoiseParser(root.argument))
+			case 'shift_b': return new ShiftB(NoiseParser(root.argument))
+			case 'shift': return new Shift(NoiseParser(root.argument))
+			case 'blend_density': return new BlendDensity(inputParser(root.argument))
+			case 'clamp': return new Clamp(
 				inputParser(root.input),
 				Json.readNumber(root.min) ?? 0,
 				Json.readNumber(root.max) ?? 1,
 			)
-			case 'minecraft:abs':
-			case 'minecraft:square':
-			case 'minecraft:cube':
-			case 'minecraft:half_negative':
-			case 'minecraft:quarter_negative':
-			case 'minecraft:squeeze':
+			case 'abs':
+			case 'square':
+			case 'cube':
+			case 'half_negative':
+			case 'quarter_negative':
+			case 'squeeze':
 				return new Mapped(type, inputParser(root.argument))
-			case 'minecraft:add':
-			case 'minecraft:mul':
-			case 'minecraft:min':
-			case 'minecraft:max': return new Ap2(
+			case 'add':
+			case 'mul':
+			case 'min':
+			case 'max': return new Ap2(
 				Json.readEnum(type, Ap2Type),
 				inputParser(root.argument1),
 				inputParser(root.argument2),
 			)
-			case 'minecraft:spline': return new Spline(
+			case 'spline': return new Spline(
 				CubicSpline.fromJson(root.spline, inputParser)
 			)
-			case 'minecraft:constant': return new Constant(Json.readNumber(root.argument) ?? 0)
-			case 'minecraft:y_clamped_gradient': return new YClampedGradient(
+			case 'constant': return new Constant(Json.readNumber(root.argument) ?? 0)
+			case 'y_clamped_gradient': return new YClampedGradient(
 				Json.readInt(root.from_y) ?? -4064,
 				Json.readInt(root.to_y) ?? 4062,
 				Json.readNumber(root.from_value) ?? -4064,
@@ -649,16 +649,16 @@ export namespace DensityFunction {
 		}
 	}
 
-	const MappedType = ['minecraft:abs', 'minecraft:square', 'minecraft:cube', 'minecraft:half_negative', 'minecraft:quarter_negative', 'minecraft:squeeze'] as const
+	const MappedType = ['abs', 'square', 'cube', 'half_negative', 'quarter_negative', 'squeeze'] as const
 
 	export class Mapped extends Transformer {
 		private static readonly MappedTypes: Record<typeof MappedType[number], (density: number) => number> = {
-			"minecraft:abs": d => Math.abs(d),
-			"minecraft:square": d => d * d,
-			"minecraft:cube": d => d * d * d,
-			"minecraft:half_negative": d => d > 0 ? d : d * 0.5,
-			"minecraft:quarter_negative": d => d > 0 ? d : d * 0.25,
-			"minecraft:squeeze": d => {
+			abs: d => Math.abs(d),
+			square: d => d * d,
+			cube: d => d * d * d,
+			half_negative: d => d > 0 ? d : d * 0.5,
+			quarter_negative: d => d > 0 ? d : d * 0.25,
+			squeeze: d => {
 				const c = clamp(d, -1, 1)
 				return c / 2 - c * c * c / 24
 			},
@@ -689,7 +689,7 @@ export namespace DensityFunction {
 			const minInput = this.input.minValue()
 			let min = this.transformer(minInput)
 			let max = this.transformer(this.input.maxValue())
-			if (this.type === 'minecraft:abs' || this.type === 'minecraft:square') {
+			if (this.type === 'abs' || this.type === 'square') {
 				max = Math.max(min, max)
 				min = Math.max(0, minInput)
 			}
@@ -697,7 +697,7 @@ export namespace DensityFunction {
 		}
 	}
 
-	const Ap2Type = ['minecraft:add', 'minecraft:mul', 'minecraft:min', 'minecraft:max'] as const
+	const Ap2Type = ['add', 'mul', 'min', 'max'] as const
 
 	export class Ap2 extends DensityFunction {
 		constructor(
@@ -712,10 +712,10 @@ export namespace DensityFunction {
 		public compute(context: Context) {
 			const a = this.argument1.compute(context)
 			switch (this.type) {
-				case 'minecraft:add': return a + this.argument2.compute(context)
-				case 'minecraft:mul': return a === 0 ? 0 : a * this.argument2.compute(context)
-				case 'minecraft:min': return a < this.argument2.minValue() ? a : Math.min(a, this.argument2.compute(context))
-				case 'minecraft:max': return a > this.argument2.maxValue() ? a : Math.max(a, this.argument2.compute(context))
+				case 'add': return a + this.argument2.compute(context)
+				case 'mul': return a === 0 ? 0 : a * this.argument2.compute(context)
+				case 'min': return a < this.argument2.minValue() ? a : Math.min(a, this.argument2.compute(context))
+				case 'max': return a > this.argument2.maxValue() ? a : Math.max(a, this.argument2.compute(context))
 			}
 		}
 		public mapAll(visitor: Visitor) {
@@ -732,16 +732,16 @@ export namespace DensityFunction {
 			const min2 = this.argument2.minValue()
 			const max1 = this.argument1.maxValue()
 			const max2 = this.argument2.maxValue()
-			if ((this.type === 'minecraft:min' || this.type === 'minecraft:max') && (min1 >= max2 || min2 >= max1)) {
+			if ((this.type === 'min' || this.type === 'max') && (min1 >= max2 || min2 >= max1)) {
 				console.warn(`Creating a ${this.type} function between two non-overlapping inputs`)
 			}
 			let min, max
 			switch (this.type) {
-				case 'minecraft:add':
+				case 'add':
 					min = min1 + min2
 					max = max1 + max2
 					break
-				case 'minecraft:mul':
+				case 'mul':
 					min = min1 > 0 && min2 > 0 ? (min1 * min2) || 0
 						: max1 < 0 && max2 < 0 ? (max1 * max2) || 0
 							: Math.min((min1 * max2) || 0, (min2 * max1) || 0)
@@ -749,11 +749,11 @@ export namespace DensityFunction {
 						: max1 < 0 && max2 < 0 ? (min1 * min2) || 0
 							: Math.max((min1 * min2) || 0, (max1 * max2) || 0)
 					break
-				case 'minecraft:min':
+				case 'min':
 					min = Math.min(min1, min2)
 					max = Math.min(max1, max2)
 					break
-				case 'minecraft:max':
+				case 'max':
 					min = Math.max(min1, min2)
 					max = Math.max(max1, max2)
 					break
@@ -995,7 +995,7 @@ export namespace DensityFunction {
 			super()
 		}
 		public compute(context: Context) {
-			let original = this.input.compute(context);
+			const original = this.input.compute(context)
 			if (original === 0) {
 				return this.errorOutput ? this.errorOutput.compute(context) : 0
 			}
